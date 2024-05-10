@@ -1,31 +1,53 @@
 #include <iostream>
+#include <string>
 using namespace std;
 
-class IntVector
+class Device
+{
+    string name;
+public:
+    Device() :name{ "" } {}
+    void setName(string nameArg)
+    {
+        name = nameArg;
+    }
+    string getName()
+    {
+        return name;
+    }
+    friend ostream& operator<<(ostream& out, Device& operandTwo)
+    {
+        out << operandTwo.getName();
+        return out;
+    }
+};
+
+template<typename T>
+class Vector
 {
     int capacity;
     int position;
-    int* items;
+    T* items;
     int incrementSize;
 public:
-    IntVector() :position{ 0 },capacity{10}, items{new int[capacity]}, incrementSize{10}
+    Vector() :position{ 0 },capacity{10}, items{new T[capacity]}, incrementSize{10}
     {
 
     }
-    IntVector(int capacityArg) :position{ 0 }, capacity{ capacityArg }, items{ new int[capacity] }, incrementSize{ 10 }
+    Vector(int capacityArg) :position{ 0 }, capacity{ capacityArg }, items{ new T[capacity] }, incrementSize{ 10 }
     {
 
     }
-    ~IntVector()
+    ~Vector()
     {
         delete[] items;
     }
-    void push_back(int item)
+    void push_back(T item)
     {
         if (position == capacity)
         {
             capacity += incrementSize;
-            int* temp = new int[capacity];
+            T* temp = new T[capacity];
             for (int i = 0; i < position; i++)
             {
                 temp[i] = items[i];
@@ -36,12 +58,12 @@ public:
         items[position++] = item;
     }
 
-    int operator [](const int& index)
+    T operator [](const int& index)
     {
         return items[index];
     }
 
-    friend ostream& operator<<(ostream& out, IntVector& operandTwo)
+    friend ostream& operator<<(ostream& out, Vector& operandTwo)
     {
         int i;
         for (i = 0; i < operandTwo.position - 1; i++)
@@ -56,7 +78,7 @@ public:
 
 int main()
 {
-    IntVector v{ 10 };
+    Vector<int> v{ 10 };
     v.push_back(10);
     v.push_back(20);
     v.push_back(30);
@@ -76,5 +98,21 @@ int main()
     int item = v[3];
     cout << item << endl;
     cout << v << endl;
+
+    Vector<string> vs;
+    vs.push_back("A10");
+    vs.push_back("A20");
+    cout << vs << endl;
+
+    Vector<Device> vd;
+    Device obj1;
+    obj1.setName("D1");
+    Device obj2;
+    obj2.setName("D2");
+    vd.push_back(obj1);
+    vd.push_back(obj2);
+    
+    cout << vd << endl;
+
     return 0;
 }
